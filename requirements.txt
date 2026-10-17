@@ -1,0 +1,7 @@
+# The experiments were run on Kaggle/Colab (NVIDIA Tesla T4, PyTorch 2.11).
+torch>=2.1
+torchvision>=0.16
+numpy
+matplotlib
+# AutoAttack (Croce & Hein, 2020) is installed from GitHub:
+autoattack @ git+https://github.com/fra31/auto-attack

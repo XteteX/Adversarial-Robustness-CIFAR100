@@ -1,0 +1,31 @@
+cff-version: 1.2.0
+message: "If you use this code or these results, please cite the paper below."
+title: "Adversarial-Robustness-CIFAR100"
+type: software
+repository-code: "https://github.com/XteteX/Adversarial-Robustness-CIFAR100"
+license: MIT
+authors:
+  - family-names: Oryntay
+    given-names: Marlen
+    affiliation: "National Physics and Mathematics School, Almaty, Kazakhstan"
+  - family-names: Ghani
+    given-names: Anwar
+    affiliation: "School of Computing and Artificial Intelligence, Nazarbayev University, Astana, Kazakhstan"
+keywords:
+  - adversarial machine learning
+  - adversarial training
+  - robustness
+  - accuracy-robustness trade-off
+  - ResNet-18
+  - VGG-16
+  - CIFAR-100
+preferred-citation:
+  type: article
+  title: "Clean Accuracy Explains Most of the Robustness Gap: A Controlled Comparison of ResNet-18 and VGG-16 under Adversarial Training on CIFAR-100"
+  authors:
+    - family-names: Oryntay
+      given-names: Marlen
+    - family-names: Ghani
+      given-names: Anwar
+  year: 2026
+  notes: "Preprint"
