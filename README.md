@@ -49,21 +49,21 @@ All numbers are the **mean ± std over 3 seeds**, final (last-epoch) checkpoint,
 
 | Model | Clean | Macro F1 | FGSM | PGD-7 | PGD-20 | AutoAttack |
 |---|---:|---:|---:|---:|---:|---:|
-| ResNet-18 (standard) | 74.96 ± 0.03 | 0.750 | 6.68 ± 0.47 | 0.01 ± 0.01 | 0.00 ± 0.00 | 0.00 ± 0.00 |
-| ResNet-18 (mixed AT) | 69.81 ± 0.04 | 0.697 | **17.37 ± 0.12** | **10.27 ± 0.30** | **7.10 ± 0.16** | **5.77 ± 0.31** |
-| VGG-16 (standard) | 61.84 ± 0.15 | 0.622 | 6.19 ± 0.43 | 0.22 ± 0.09 | 0.07 ± 0.06 | 0.00 ± 0.00 |
-| VGG-16 (mixed AT) | 57.90 ± 0.64 | 0.577 | 14.99 ± 0.27 | 8.86 ± 0.14 | 6.03 ± 0.16 | 4.13 ± 0.12 |
+| ResNet-18 (standard) | 74.96<sub>±0.03</sub> | 0.750 | 6.68<sub>±0.47</sub> | 0.01<sub>±0.01</sub> | 0.00<sub>±0.00</sub> | 0.00<sub>±0.00</sub> |
+| ResNet-18 (mixed AT) | 69.81<sub>±0.04</sub> | 0.697 | **17.37**<sub>±0.12</sub> | **10.27**<sub>±0.30</sub> | **7.10**<sub>±0.16</sub> | **5.77**<sub>±0.31</sub> |
+| VGG-16 (standard) | 61.84<sub>±0.15</sub> | 0.622 | 6.19<sub>±0.43</sub> | 0.22<sub>±0.09</sub> | 0.07<sub>±0.06</sub> | 0.00<sub>±0.00</sub> |
+| VGG-16 (mixed AT) | 57.90<sub>±0.64</sub> | 0.577 | 14.99<sub>±0.27</sub> | 8.86<sub>±0.14</sub> | 6.03<sub>±0.16</sub> | 4.13<sub>±0.12</sub> |
 
 **Table II: PGD-20 accuracy and conditional robust accuracy ρ by budget (adversarially trained models)**
 
 | Model | ε | PGD-20 (%) | NRR | ρ (%) |
 |---|---|---:|---:|---:|
-| ResNet-18 (AT) | 2/255 | 48.29 ± 0.33 | 57.1 | 69.2 ± 0.5 |
-| | 4/255 | 28.17 ± 0.37 | 40.1 | 40.3 ± 0.5 |
-| | 8/255 | 7.10 ± 0.16 | 12.9 | 10.2 ± 0.2 |
-| VGG-16 (AT) | 2/255 | 37.05 ± 0.63 | 45.2 | 63.9 ± 0.4 |
-| | 4/255 | 21.84 ± 0.19 | 31.7 | 37.7 ± 0.1 |
-| | 8/255 | 6.03 ± 0.16 | 10.9 | 10.4 ± 0.4 |
+| ResNet-18 (AT) | 2/255 | 48.29<sub>±0.33</sub> | 57.1 | 69.2<sub>±0.5</sub> |
+| | 4/255 | 28.17<sub>±0.37</sub> | 40.1 | 40.3<sub>±0.5</sub> |
+| | 8/255 | 7.10<sub>±0.16</sub> | 12.9 | 10.2<sub>±0.2</sub> |
+| VGG-16 (AT) | 2/255 | 37.05<sub>±0.63</sub> | 45.2 | 63.9<sub>±0.4</sub> |
+| | 4/255 | 21.84<sub>±0.19</sub> | 31.7 | 37.7<sub>±0.1</sub> |
+| | 8/255 | 6.03<sub>±0.16</sub> | 10.9 | 10.4<sub>±0.4</sub> |
 
 **Table III: where the ResNet-18 vs VGG-16 gap comes from (PGD-20, percentage points)**
 
@@ -103,7 +103,7 @@ Weak or broken attacks can make a model look robust (gradient masking). We follo
 
 ## Method
 
-| | |
+| Component | Setting |
 |---|---|
 | **Data** | CIFAR-100: 49k train / 1k validation / 10k test, random crop (padding 4) + horizontal flip. Pixels stay in [0, 1]; normalisation is the first layer of the model, so ε is in pixel units |
 | **Networks** | ResNet-18 (11.22M parameters, 3×3 stem, no max-pool) and VGG-16-BN (15.30M parameters, global average pooling, 2×512 classifier) |
