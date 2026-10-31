@@ -4,6 +4,7 @@ title: "Adversarial-Robustness-CIFAR100"
 type: software
 repository-code: "https://github.com/XteteX/Adversarial-Robustness-CIFAR100"
 license: MIT
+doi: "10.5281/zenodo.23832271"
 authors:
   - family-names: Oryntay
     given-names: Marlen
@@ -28,4 +29,8 @@ preferred-citation:
     - family-names: Ghani
       given-names: Anwar
   year: 2026
+  doi: "10.5281/zenodo.23832271"
+  publisher:
+    name: "Zenodo"
+  url: "https://doi.org/10.5281/zenodo.23832271"
   notes: "Preprint"
