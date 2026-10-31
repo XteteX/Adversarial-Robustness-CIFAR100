@@ -1,0 +1,7 @@
+model,clean_acc_mean,clean_acc_std,pgd20_4_mean,pgd20_4_std,autoattack_4_1k_mean,autoattack_4_1k_std,pgd20_8_mean,pgd20_8_std,autoattack_8_1k_mean,autoattack_8_1k_std
+ResNet-18 (standard),74.96,0.03,0.07,0.04,0.00,0.00,0.00,0.00,0.00,0.00
+ResNet-18 (mixed AT),69.81,0.04,28.17,0.37,27.37,0.33,7.10,0.16,5.77,0.31
+VGG-16 (standard),61.84,0.15,0.50,0.17,0.03,0.05,0.07,0.06,0.00,0.00
+VGG-16 (mixed AT),57.90,0.64,21.84,0.19,20.93,0.05,6.03,0.16,4.13,0.12
+VGG-16-lin (standard),69.14,0.26,0.10,0.05,0.00,0.00,0.00,0.00,0.00,0.00
+VGG-16-lin (mixed AT),64.12,0.30,23.43,0.27,22.77,0.45,5.80,0.05,4.63,0.25

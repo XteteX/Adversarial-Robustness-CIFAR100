@@ -1,0 +1,7 @@
+comparison,eps,gap_mean,gap_std,clean_part_mean,clean_part_std,clean_share_pct,clean_share_pct_std,conditional_part_mean,conditional_part_std,clean_share_reverse_order_pct,rho_a,rho_b
+ResNet-18 vs VGG-16 (AT),2/255,11.24,0.95,7.61,0.37,68,3,3.65,0.60,73,69.2,63.9
+ResNet-18 vs VGG-16 (AT),4/255,6.33,0.55,4.49,0.26,71,2,1.84,0.30,76,40.3,37.7
+ResNet-18 vs VGG-16 (AT),8/255,1.07,0.03,1.24,0.11,116,8,-0.18,0.09,114,10.2,10.4
+ResNet-18 vs VGG-16-lin (AT),2/255,6.40,0.38,3.72,0.19,58,4,2.68,0.39,62,69.2,65.3
+ResNet-18 vs VGG-16-lin (AT),4/255,4.74,0.63,2.08,0.11,45,7,2.66,0.65,49,40.3,36.5
+ResNet-18 vs VGG-16-lin (AT),8/255,1.30,0.21,0.51,0.03,41,8,0.79,0.23,46,10.2,9.0
