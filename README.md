@@ -9,6 +9,7 @@
 ¹ National Physics and Mathematics School, Almaty, Kazakhstan &nbsp;·&nbsp; ² School of Computing and Artificial Intelligence, Nazarbayev University, Astana, Kazakhstan
 
 [![Paper](https://img.shields.io/badge/paper-PDF-b31b1b)](paper/Oryntay_Ghani_2026_Clean_Accuracy_Explains_Robustness_Gap.pdf)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23832271.svg)](https://doi.org/10.5281/zenodo.23832271)
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/XteteX/Adversarial-Robustness-CIFAR100/blob/main/notebooks/adversarial_robustness_cifar100.ipynb)
 [![Open In Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://kaggle.com/kernels/welcome?src=https://github.com/XteteX/Adversarial-Robustness-CIFAR100/blob/main/notebooks/adversarial_robustness_cifar100.ipynb)
 ![PyTorch](https://img.shields.io/badge/PyTorch-2.11-ee4c2c)
@@ -181,8 +182,10 @@ Adversarial-Robustness-CIFAR100/
                   of {ResNet-18} and {VGG-16} under Adversarial Training on {CIFAR-100}},
   author       = {Oryntay, Marlen and Ghani, Anwar},
   year         = {2026},
-  note         = {Preprint},
-  howpublished = {\url{https://github.com/XteteX/Adversarial-Robustness-CIFAR100}}
+  publisher    = {Zenodo},
+  doi          = {10.5281/zenodo.23832271},
+  url          = {https://doi.org/10.5281/zenodo.23832271},
+  note         = {Preprint}
 }
 ```
 
