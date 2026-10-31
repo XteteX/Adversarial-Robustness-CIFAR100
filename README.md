@@ -20,9 +20,9 @@
 
 ## TL;DR
 
-Residual networks are often reported to be more robust than plain sequential networks after adversarial training. But a model that classifies more clean images correctly also has more images that *can* survive an attack. We train **ResNet-18** and **VGG-16** on **CIFAR-100** with an identical recipe (3 seeds, 12 models) and split robust accuracy into *clean accuracy × the fraction of correct predictions that survive the attack*.
+Residual networks are often reported to be more robust than plain sequential networks after adversarial training. But a model that classifies more clean images correctly also has more images that *can* survive an attack. We train **ResNet-18** and **VGG-16** on **CIFAR-100** with an identical recipe (3 seeds, 12 models, plus a 6-model VGG-16 control) and split robust accuracy into *clean accuracy × the fraction of correct predictions that survive the attack*.
 
-**About 70 % of ResNet-18's robustness advantage at ε ≤ 4/255, and all of it at ε = 8/255, comes from its higher clean accuracy, not from being harder to attack.**
+**About 70 % of ResNet-18's robustness advantage at ε ≤ 4/255, and all of it at ε = 8/255, comes from its higher clean accuracy, not from being harder to attack.** Against a better-trained VGG-16 control the share is still 41–58 %.
 
 <p align="center">
   <img src="figures/pipeline.png" width="100%" alt="Overview of the study: data, mixed-loss adversarial training, evaluation, metrics">
@@ -34,10 +34,11 @@ Residual networks are often reported to be more robust than plain sequential net
 ## Key findings
 
 1. **No defence, no robustness.** Without adversarial training, PGD-20 at ε = 4/255 drives both networks to ≤ 0.5 % accuracy.
-2. **Mixed-loss adversarial training works at the budget it was trained on.** At ε = 4/255, PGD-20 accuracy rises to **28.17 %** (ResNet-18) and **21.84 %** (VGG-16), at a clean-accuracy cost of 5.15 and 3.94 points. It transfers poorly to ε = 8/255 (AutoAttack: 5.77 % and 4.13 %).
+2. **Mixed-loss adversarial training works at the budget it was trained on.** At ε = 4/255, PGD-20 accuracy rises to **28.17 %** (ResNet-18) and **21.84 %** (VGG-16), AutoAttack to **27.37 %** and **20.93 %**, at a clean-accuracy cost of 5.15 and 3.94 points. It transfers poorly to ε = 8/255 (AutoAttack: 5.77 % and 4.13 %).
 3. **The architecture gap is mostly a clean-accuracy gap.** ResNet-18 is ahead in absolute robust accuracy at every budget, but about 70 % of the gap at ε ≤ 4/255 and all of it at ε = 8/255 is explained by its higher clean accuracy.
-4. **"Best checkpoint" selection can double the measured trade-off.** Selecting checkpoints on a small (1,000-image) robust validation set makes VGG-16's clean-accuracy cost look like 8.3 points instead of 3.9.
-5. **The "failure cases are better learned" pattern** reported for PGD-AT by Wang & Liu (ICCV 2025) **does not appear** under this weaker objective, although adversarial training moves both networks towards it.
+4. **The exact share depends on how well the baseline is trained.** Replacing VGG-16's 2×512 classifier head with a single linear layer (VGG-16-lin) raises its clean accuracy by 6–7 points but leaves ρ essentially unchanged. Against this stronger baseline, clean accuracy explains 58 / 45 / 41 % of the gap at ε = 2 / 4 / 8 /255, and ResNet-18 keeps a small conditional advantage.
+5. **"Best checkpoint" selection can double the measured trade-off.** Selecting checkpoints on a small (1,000-image) robust validation set makes VGG-16's clean-accuracy cost look like 8.3 points instead of 3.9.
+6. **The "failure cases are better learned" pattern** reported for PGD-AT by Wang & Liu (ICCV 2025) **does not appear** under this weaker objective, although adversarial training moves both networks towards it.
 
 ---
 
@@ -79,6 +80,17 @@ Robust accuracy factorises as `A_rob = A_clean · ρ`, where **ρ = P(correct un
 | 4/255 | 6.33 | 4.49 (**71 %**) | 1.84 (29 %) |
 | 8/255 | 1.07 | 1.24 (**116 %**) | −0.17 |
 
+With std over seed pairs and the reverse reference order, see [`results/gap_decomposition.csv`](results/gap_decomposition.csv) (reverse order: 73 / 76 / 114 %).
+
+**Table IV: control with a better-trained VGG-16 (single linear head), AT at ε = 4/255**
+
+| Model | Clean | PGD-20 (4/255) | AutoAttack (4/255) | ρ at 4/255 | Gap to ResNet-18 due to clean acc. (4/255) |
+|---|---:|---:|---:|---:|---:|
+| VGG-16 (mixed AT) | 57.90<sub>±0.64</sub> | 21.84<sub>±0.19</sub> | 20.93<sub>±0.05</sub> | 37.7 | **71 %** |
+| VGG-16-lin (mixed AT) | 64.12<sub>±0.30</sub> | 23.43<sub>±0.27</sub> | 22.77<sub>±0.45</sub> | 36.5 | **45 %** |
+
+The new head changes clean accuracy, not conditional robustness, so it affects robust accuracy only through clean accuracy.
+
 Full tables for both checkpoints, including NRR and the logit-MSE ratio, are in [`results/`](results/).
 
 <p align="center">
@@ -97,7 +109,8 @@ Weak or broken attacks can make a model look robust (gradient masking). We follo
 
 * attacks are ordered as expected: FGSM > PGD-7 > PGD-20 > AutoAttack;
 * PGD-20 with a huge budget (ε = 64/255) drives **every** model to 0 %;
-* inside AutoAttack, the black-box Square attack finds no additional adversarial examples beyond the gradient-based APGD.
+* inside AutoAttack, the black-box Square attack finds no additional adversarial examples beyond the gradient-based APGD;
+* on the same 1,000 test images, AutoAttack at the training budget ε = 4/255 is only 1.3–1.6 points below PGD-20 (ResNet-18: 27.37 vs 28.63 %; VGG-16: 20.93 vs 22.50 %), see [`results/same_subset_pgd20_vs_autoattack.csv`](results/same_subset_pgd20_vs_autoattack.csv).
 
 ---
 
@@ -106,10 +119,10 @@ Weak or broken attacks can make a model look robust (gradient masking). We follo
 | Component | Setting |
 |---|---|
 | **Data** | CIFAR-100: 49k train / 1k validation / 10k test, random crop (padding 4) + horizontal flip. Pixels stay in [0, 1]; normalisation is the first layer of the model, so ε is in pixel units |
-| **Networks** | ResNet-18 (11.22M parameters, 3×3 stem, no max-pool) and VGG-16-BN (15.30M parameters, global average pooling, 2×512 classifier) |
+| **Networks** | ResNet-18 (11.22M parameters, 3×3 stem, no max-pool), VGG-16-BN (15.30M parameters, global average pooling, 2×512 classifier) and the control VGG-16-lin (14.77M, same backbone, single linear classifier) |
 | **Training** | SGD (momentum 0.9, weight decay 5e-4), lr 0.1 ÷10 at epochs 25 and 37, batch 128, 50 epochs, 3 seeds |
 | **Adversarial training** | L = ½·CE(x) + ½·CE(x_adv), with x_adv from PGD-3 (ε = 4/255, α = 1/255) crafted with BatchNorm in inference mode |
-| **Attacks** | FGSM; PGD-7 (α = ε/4); PGD-20 (α = 2/255), all with random start; AutoAttack (standard: APGD-CE, APGD-T, FAB-T, Square) at ε = 8/255 on 1,000 test images |
+| **Attacks** | FGSM; PGD-7 (α = ε/4); PGD-20 (α = 2/255), all with random start; AutoAttack (standard: APGD-CE, APGD-T, FAB-T, Square) at ε = 4/255 and 8/255 on 1,000 test images |
 | **Metrics** | Clean / robust accuracy, Macro F1, Natural-Robustness Ratio (NRR), conditional robust accuracy ρ, perception consistency (logit MSE, failed vs defended samples) |
 
 The attacks (FGSM, PGD) are implemented from scratch in the notebook; AutoAttack uses the [official implementation](https://github.com/fra31/auto-attack).
@@ -126,7 +139,9 @@ Everything lives in one notebook: [`notebooks/adversarial_robustness_cifar100.ip
 
 To combine seeds trained in different Kaggle sessions, add the earlier output folders (`robust_v2/`) as notebook inputs; the first cell merges them.
 
-Model checkpoints are not included in this repository because of their size (12 models).
+The revision experiments (AutoAttack at 4/255, same-subset PGD-20, the VGG-16-lin control and the extended tables) are in [`notebooks/revision_experiments.py`](notebooks/revision_experiments.py); they were run as extra cells at the end of the notebook (about 6.75 GPU-hours on a T4).
+
+Model checkpoints are not included in this repository because of their size (18 models).
 
 ---
 
@@ -137,7 +152,8 @@ Adversarial-Robustness-CIFAR100/
 ├── paper/
 │   └── Oryntay_Ghani_2026_Clean_Accuracy_Explains_Robustness_Gap.pdf
 ├── notebooks/
-│   └── adversarial_robustness_cifar100.ipynb   # training, attacks, evaluation, tables, figures
+│   ├── adversarial_robustness_cifar100.ipynb   # training, attacks, evaluation, tables, figures
+│   └── revision_experiments.py                 # AutoAttack at 4/255, VGG-16-lin control, extra tables
 ├── results/                                     # all reported numbers as CSV (mean, std over seeds)
 ├── figures/                                     # figures used in this README
 ├── requirements.txt
@@ -149,10 +165,10 @@ Adversarial-Robustness-CIFAR100/
 
 ## Limitations
 
-1. The adversarial-training objective is weaker than standard PGD-10 training at ε = 8/255, which explains the low robustness at 8/255. Conclusions at that budget should not be extrapolated to standard PGD-AT.
-2. 50 training epochs: clean accuracy is below the best reported values for these architectures, especially for VGG-16.
-3. AutoAttack runs on 1,000 test images (standard error ≈ 0.7 points at the measured accuracies).
-4. One dataset and two architectures, which differ in more than skip connections (depth, parameter count, classifier head).
+1. The adversarial-training objective is weaker than standard PGD-AT at ε = 8/255. Published PGD-AT ResNet-18 models on CIFAR-100 reach 56.6 % clean / 25.0 % AutoAttack at 8/255 (Wang & Liu, ICCV 2025), and the PreActResNet-18 of Rice et al. 53.8 % / 19.0 % (RobustBench). Our ResNet-18 instead trades robustness at 8/255 (5.8 %) for higher clean accuracy (69.8 %); conclusions at that budget should not be extrapolated to standard PGD-AT.
+2. Limited compute (free T4 GPUs, 50 epochs): absolute accuracies are below published results, and VGG-16 is below common CIFAR-100 implementations. The VGG-16-lin control shows that the clean-accuracy share depends on baseline strength (71 % vs 45 % at 4/255).
+3. AutoAttack runs on 1,000 test images (standard error 0.7–1.4 points).
+4. One dataset and three networks; ResNet-18 and VGG-16 differ in more than skip connections (depth, parameter count, classifier head).
 5. Three seeds: differences below one point should be read with caution.
 
 ---
@@ -183,6 +199,7 @@ Code: [MIT](LICENSE). The paper PDF is © its authors.
 
 * **July 2026:** a custom VGG-style CNN on CIFAR-10, attacked with FGSM and PGD and defended with FGSM-based adversarial training.
 * **September 2026:** ResNet-18 vs VGG-16 on CIFAR-100 (Adam, 15 epochs, one seed, `torchattacks`).
-* **October 2026 (this version):** the controlled multi-seed study described above. The notebook's header lists what changed. The most important change is a bug fix: input normalisation used to happen in the data loader, so the attack budget ε was applied in normalised units. Normalisation is now the first layer of the model, so ε = 8/255 really means 8/255 in pixel space.
+* **October 2026:** the controlled multi-seed study described above. The notebook's header lists what changed. The most important change is a bug fix: input normalisation used to happen in the data loader, so the attack budget ε was applied in normalised units. Normalisation is now the first layer of the model, so ε = 8/255 really means 8/255 in pixel space.
+* **Late October 2026 (this version):** revision after mentor feedback: AutoAttack at the training budget, same-subset PGD-20 vs AutoAttack, std for the decomposition, the VGG-16-lin control and a comparison with published PGD-AT results.
 
 </details>
